@@ -71,6 +71,9 @@ private:
 	CArrayFix<TCoeHelpContext>* HelpContextL() const;
 
 private:
+	void ShowWelcomeDialogL();
+
+private:
 	// Data
 
 	/**

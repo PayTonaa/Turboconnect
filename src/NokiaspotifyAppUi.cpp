@@ -1,7 +1,7 @@
 /*
  ============================================================================
  Name		: NokiaspotifyAppUi.cpp
- Author	     : Turbotoster
+ Author	  :
  Copyright   : Your copyright notice
  Description : CNokiaspotifyAppUi implementation
  ============================================================================
@@ -12,9 +12,6 @@
 #include <aknmessagequerydialog.h>
 #include <aknnotewrappers.h>
 #include <stringloader.h>
-#include <f32file.h>
-#include <s32file.h>
-#include <hlplch.h>
 
 #include <Nokiaspotify_0xE0A04525.rsg>
 
@@ -27,8 +24,10 @@
 #include "NokiaspotifyAppUi.h"
 #include "NokiaspotifyAppView.h"
 
-_LIT( KFileName, "C:\\private\\E0A04525\\Nokiaspotify.txt" );
-_LIT( KText, "Hello World!");
+_LIT(KinformationText,
+	"Connect to internet, login yo your accont\n"
+	"NOTE! Spotify premium is required");
+_LIT(KinformationHead, "Spotify for Nokia");
 
 // ============================ MEMBER FUNCTIONS ===============================
 
@@ -43,31 +42,11 @@ void CNokiaspotifyAppUi::ConstructL()
 	// Initialise app UI with standard value.
 	BaseConstructL(CAknAppUi::EAknEnableSkin);
 
-	// Create view object
 	iAppView = CNokiaspotifyAppView::NewL(ClientRect());
-
-	// Create a file to write the text to
-	TInt err = CCoeEnv::Static()->FsSession().MkDirAll(KFileName);
-	if ((KErrNone != err) && (KErrAlreadyExists != err))
-		{
-		return;
-		}
-
-	RFile file;
-	err = file.Replace(CCoeEnv::Static()->FsSession(), KFileName, EFileWrite);
-	CleanupClosePushL(file);
-	if (KErrNone != err)
-		{
-		CleanupStack::PopAndDestroy(1); // file
-		return;
-		}
-
-	RFileWriteStream outputFileStream(file);
-	CleanupClosePushL(outputFileStream);
-	outputFileStream << KText;
-
-	CleanupStack::PopAndDestroy(2); // outputFileStream, file
-
+	AddToStackL(iAppView);
+	iAppView->SetFocus(ETrue);
+	TRAP_IGNORE(ShowWelcomeDialogL());
+	iAppView->DrawNow();
 	}
 // -----------------------------------------------------------------------------
 // CNokiaspotifyAppUi::CNokiaspotifyAppUi()
@@ -76,7 +55,6 @@ void CNokiaspotifyAppUi::ConstructL()
 //
 CNokiaspotifyAppUi::CNokiaspotifyAppUi()
 	{
-	// No implementation required
 	}
 
 // -----------------------------------------------------------------------------
@@ -88,11 +66,13 @@ CNokiaspotifyAppUi::~CNokiaspotifyAppUi()
 	{
 	if (iAppView)
 		{
+		RemoveFromStack(iAppView);
 		delete iAppView;
 		iAppView = NULL;
 		}
 
 	}
+
 
 // -----------------------------------------------------------------------------
 // CNokiaspotifyAppUi::HandleCommandL()
@@ -127,36 +107,19 @@ void CNokiaspotifyAppUi::HandleCommandL(TInt aCommand)
 			break;
 		case ECommand2:
 			{
-			RFile rFile;
-
-			//Open file where the stream text is
-			User::LeaveIfError(rFile.Open(CCoeEnv::Static()->FsSession(),
-					KFileName, EFileStreamText));//EFileShareReadersOnly));// EFileStreamText));
-			CleanupClosePushL(rFile);
-
-			// copy stream from file to RFileStream object
-			RFileReadStream inputFileStream(rFile);
-			CleanupClosePushL(inputFileStream);
-
-			// HBufC descriptor is created from the RFileStream object.
-			HBufC* fileData = HBufC::NewLC(inputFileStream, 32);
-
-			CAknInformationNote* informationNote;
-
-			informationNote = new (ELeave) CAknInformationNote;
-			// Show the information Note
-			informationNote->ExecuteLD(*fileData);
-
-			// Pop loaded resources from the cleanup stack
-			CleanupStack::PopAndDestroy(3); // filedata, inputFileStream, rFile
+			_LIT(KAuthors,
+				"Turboconnect / Spotify for Nokia\n"
+				"Author: Turbotoster\n"
+				"Device: Nokia E75");
+			CAknInformationNote* note = new (ELeave) CAknInformationNote;
+			note->ExecuteLD(KAuthors);
 			}
 			break;
 		case EHelp:
-			{
-
-			CArrayFix<TCoeHelpContext>* buf = CCoeAppUi::AppHelpContextL();
-			HlpLauncher::LaunchHelpApplicationL(iEikonEnv->WsSession(), buf);
-			}
+			ShowWelcomeDialogL();
+			break;
+		case ELogin:
+			ShowLoginInfoL();
 			break;
 		case EAbout:
 			{
@@ -173,9 +136,33 @@ void CNokiaspotifyAppUi::HandleCommandL(TInt aCommand)
 			}
 			break;
 		default:
-			Panic( ENokiaspotifyUi);
+			// Do not Panic: the shell sends many command ids; unknown ones are OK.
 			break;
 		}
+	}
+
+void CNokiaspotifyAppUi::ShowWelcomeDialogL()
+	{
+	const TInt len = KinformationHead().Length() + KinformationText().Length() + 4;
+	HBufC* msg = HBufC::NewLC(len);
+	msg->Des().Copy(KinformationHead);
+	msg->Des().Append(_L("\n\n"));
+	msg->Des().Append(KinformationText);
+	CAknInformationNote* note = new (ELeave) CAknInformationNote;
+	note->ExecuteLD(*msg);
+	CleanupStack::PopAndDestroy(msg);
+	}
+
+void CNokiaspotifyAppUi::HandleLoginFromViewL()
+	{
+	TRAP_IGNORE(ShowLoginInfoL());
+	}
+
+void CNokiaspotifyAppUi::ShowLoginInfoL()
+	{
+	_LIT(KLoginInfo, "Log In: not wired yet — server OAuth next.");
+	CAknInformationNote* note = new (ELeave) CAknInformationNote;
+	note->ExecuteLD(KLoginInfo);
 	}
 // -----------------------------------------------------------------------------
 //  Called by the framework when the application status pane
@@ -185,7 +172,10 @@ void CNokiaspotifyAppUi::HandleCommandL(TInt aCommand)
 //
 void CNokiaspotifyAppUi::HandleStatusPaneSizeChange()
 	{
-	iAppView->SetRect(ClientRect());
+	if (iAppView)
+		{
+		iAppView->SetRect(ClientRect());
+		}
 	}
 
 CArrayFix<TCoeHelpContext>* CNokiaspotifyAppUi::HelpContextL() const
