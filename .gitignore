@@ -17,6 +17,10 @@ htmlcov/
 .mypy_cache/
 .ruff_cache/
 
+# --- Turboconnect: własne MP3 (tylko Ty wgrywasz; nie commituj) ---
+server/music_library/**
+!server/music_library/.gitkeep
+
 # Secrets / local config
 .env
 .env.*

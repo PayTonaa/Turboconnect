@@ -18,7 +18,13 @@ enum TNokiaspotifyIds
 	ECommand1 = 0x6001, // start value must not be 0
 	ECommand2,
 	EHelp,
-	EAbout
+	ELogin,
+	EAbout,
+	EConnectInternet,
+	EPlaylistOpen,
+	EPlaylistRemoveTrack,
+	EPlaylistDelete,
+	ELibraryReindex
 	};
 
 #endif // __NOKIASPOTIFY_HRH__

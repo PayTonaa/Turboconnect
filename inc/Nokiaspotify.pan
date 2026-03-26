@@ -19,7 +19,7 @@ enum TNokiaspotifyPanics
 
 inline void Panic(TNokiaspotifyPanics aReason)
 	{
-	_LIT(applicationName, "Nokiaspotify");
+	_LIT(applicationName, "TurboMusic");
 	User::Panic(applicationName, aReason);
 	}
 

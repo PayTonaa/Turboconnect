@@ -1,7 +1,7 @@
 /*
  ============================================================================
  Name		: NokiaspotifyAppView.h
- Author	  : 
+ Author	  :
  Copyright   : Your copyright notice
  Description : Declares view class for application.
  ============================================================================
@@ -12,6 +12,8 @@
 
 // INCLUDES
 #include <coecntrl.h>
+#include <e32base.h>
+#include <e32std.h>
 
 // CLASS DECLARATION
 class CNokiaspotifyAppView : public CCoeControl
@@ -63,11 +65,21 @@ public:
 	/**
 	 * From CoeControl, HandlePointerEventL.
 	 * Called by framework when a pointer touch event occurs.
-	 * Note: although this method is compatible with earlier SDKs, 
+	 * Note: although this method is compatible with earlier SDKs,
 	 * it will not be called in SDKs without Touch support.
 	 * @param aPointerEvent the information about this event
 	 */
 	virtual void HandlePointerEventL(const TPointerEvent& aPointerEvent);
+
+	virtual TKeyResponse OfferKeyEventL(const TKeyEvent& aKeyEvent, TEventCode aType);
+	void BeginInlineSearchInputL(TBool aOnline);
+	void ShowTrackListL(const RPointerArray<HBufC>& aTracks, const TDesC& aTitle);
+	void ShowHomeScreen();
+	void SetPlaybackPanel(const TDesC& aTitle, const TDesC& aDetail);
+	void ClearPlaybackPanel();
+	void SetNowPlayingState(const TDesC& aTitle, const TDesC& aDetail, const TDesC& aStatus, TBool aShuffleEnabled);
+	void ShowNowPlayingScreen();
+	TBool IsNowPlayingVisible() const;
 
 private:
 	// Constructors
@@ -86,6 +98,34 @@ private:
 	 * C++ default constructor.
 	 */
 	CNokiaspotifyAppView();
+
+	static TRect LoginButtonRect();
+	/** Layout-only rect (not drawn): outer bounds for intro text; use inner padding when drawing. */
+	static TRect IntroduceTextBox(const TRect& aClient, const TRect& aLoginButton);
+	static TSize ClassicRound();
+	static void LeafNameFromPath(const TDesC& aPath, TDes& aOut);
+	void ExecuteSelectedMenuItemL();
+	void SubmitInlineInputL();
+	TBool iLoginButtonDown;
+	TBool iLoginKeyFocus;
+	TBool iInlineInputActive;
+	TBool iInlineInputOnline;
+	TBool iPlaybackPanelVisible;
+	TBool iTrackListVisible;
+	TBool iNowPlayingVisible;
+	TBool iNowPlayingShuffle;
+	TInt iMenuSelection;
+	TInt iTrackSelection;
+	TInt iTrackCount;
+	TBuf<32> iInlinePrompt;
+	TBuf<96> iInlineInput;
+	TBuf<32> iPlaybackTitle;
+	TBuf<96> iPlaybackDetail;
+	TBuf<32> iNowPlayingTitle;
+	TBuf<96> iNowPlayingDetail;
+	TBuf<32> iNowPlayingStatus;
+	TBuf<32> iListTitle;
+	TBuf<160> iTrackItems[24];
 
 	};
 
