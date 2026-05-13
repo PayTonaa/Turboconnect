@@ -1,0 +1,36 @@
+/*
+ ============================================================================
+ Name		: TurboSound.hrh
+ Author	  : Turbotoster
+ Copyright   : Your copyright notice
+ Description : This file contains declarations for constants of TurboSound.
+ The file can be included in C++ or resource file.
+ ============================================================================
+ */
+#ifndef __TURBOSOUND_HRH__
+#define __TURBOSOUND_HRH__
+
+#define _UID3 0xE650F19F
+
+// TurboSound enumerate command codes
+enum TTurboSoundIds
+	{
+	ECommand1 = 0x6001, // start value must not be 0
+	ECommand2,
+	EHelp,
+	EAbout,
+	ECmdPlay,
+	ECmdStop,
+	ECmdRefresh,
+	ECmdServerList,
+	ECmdFetchOnline,
+	ECmdSearch,
+	ECmdSearchClear,
+	ECmdNext,
+	ECmdPrev,
+	ECmdShowNpPanel,
+	ECmdResumeLast,
+	ECmdKeyDiag
+	};
+
+#endif // __TURBOSOUND_HRH__

@@ -1,0 +1,45 @@
+/*
+============================================================================
+ Name		: bld.inf
+ Author	  : Turbotoster
+ Copyright   : Your copyright notice
+ Description : This file provides the information required for building the
+				whole of a TurboSound.
+============================================================================
+*/
+
+
+PRJ_PLATFORMS
+WINSCW ARMV5 GCCE
+
+
+#ifdef SBSV2
+
+PRJ_EXTENSIONS
+	
+	START EXTENSION s60/mifconv
+	OPTION TARGETFILE turbosound_0xE650F19F.mif
+	OPTION HEADERFILE turbosound_0xE650F19F.mbg
+	OPTION SOURCEDIR ../gfx
+	OPTION SOURCES -c32 qgn_menu_TurboSound
+	END
+	
+	// help compiler is not always available; see similar comment in *.pkg file
+	START EXTENSION techview/bldhelp
+	OPTION HELPPROJECTFILE TurboSound.cshlp
+	OPTION HELPTOOLTARGETNAME turbosound_0xE650F19F.hlp
+	END
+
+#else
+
+PRJ_MMPFILES
+
+	gnumakefile icons_scalable_dc.mk
+
+	// help compiler is not always available; see similar comment in *.pkg file
+
+#endif
+
+PRJ_MMPFILES
+
+TurboSound.mmp

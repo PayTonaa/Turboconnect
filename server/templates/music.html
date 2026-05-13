@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Turboconnect — Library</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <link rel="icon" href="{{ url_for('static', filename='img/icon.svg') }}" type="image/svg+xml">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/turboconnect.css') }}">
+</head>
+<body class="theme-aviation tc-app tc-library-page">
+
+  <div class="cockpit-bg">
+    <div class="grid-overlay"></div>
+  </div>
+
+  <header class="tech-header">
+    <div class="tech-nav-container">
+      <a href="{{ url_for('music_page') }}" class="tech-brand">
+        <div class="brand-icon-box">
+          <i class="fas fa-headphones-alt"></i>
+        </div>
+        <div class="brand-text">
+          <span class="brand-title">TURBOCONNECT<span class="highlight">.E75</span></span>
+          <span class="brand-subtitle">MUSIC NODE</span>
+        </div>
+      </a>
+
+      <nav class="tech-menu" id="navMenu">
+        <a href="#tc-search" class="nav-link active">
+          <span class="link-bracket">[</span> SEARCH <span class="link-bracket">]</span>
+        </a>
+        <a href="#tc-library" class="nav-link">
+          <span class="link-bracket">[</span> LIBRARY <span class="link-bracket">]</span>
+        </a>
+        <a href="#tc-fetch" class="nav-link" data-tools-open>
+          <span class="link-bracket">[</span> FETCH <span class="link-bracket">]</span>
+        </a>
+        <a href="#tc-spotify" class="nav-link" data-tools-open>
+          <span class="link-bracket">[</span> SPOTIFY <span class="link-bracket">]</span>
+        </a>
+      </nav>
+
+      <div class="nav-widgets">
+        <div class="system-status">
+          <span class="status-indicator online"></span>
+          <span class="status-text">FFmpeg: {{ ffmpeg_status }}</span>
+        </div>
+        {% if current_user %}
+          <div class="tc-user-pill" title="Logged in as {{ current_user }}">
+            <i class="fas fa-user-astronaut"></i>
+            <span class="tc-user-name">{{ current_user }}</span>
+            <a href="{{ url_for('logout') }}" class="tc-logout-link" title="Log out">
+              <i class="fas fa-right-from-bracket"></i>
+            </a>
+          </div>
+        {% endif %}
+        <button type="button" class="mobile-toggle" id="menuToggle" aria-label="Menu">
+          <i class="fas fa-bars"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="tc-main">
+    <div class="tc-wrap">
+
+      <section class="tc-hero-card hud-panel" id="tc-search">
+        <div class="panel-header">
+          <span class="header-title">LIBRARY PANEL</span>
+          <span class="header-code">{{ tracks|length }} TRACK(S)</span>
+        </div>
+        <div class="panel-content">
+          <div class="tc-search-bar">
+            <label for="search-q" class="tc-label">SEARCH LIBRARY <span class="tc-kbd">/</span> to focus, <span class="tc-kbd">Esc</span> to clear</label>
+            <div class="tc-input-row">
+              <input id="search-q" type="text" name="q" value="" placeholder="start typing to filter…"
+                     autocomplete="off" spellcheck="false">
+              <button type="button" id="searchClear" class="btn-transmit tc-btn-inline tc-btn-ghost">
+                <span class="btn-content"><i class="fas fa-times"></i> CLEAR</span>
+              </button>
+            </div>
+            <p class="tc-hint" id="searchCounter"></p>
+          </div>
+        </div>
+      </section>
+
+      <form id="libForm" method="post" action="{{ url_for('playlists_add_tracks') }}">
+        <section class="hud-panel" id="tc-library">
+          <div class="panel-header">
+            <span class="header-title">AUDIO LIBRARY</span>
+            <span class="header-code">{{ tracks|length }} TRACK(S){% if q_e %} · filter: „{{ q_e }}”{% endif %}</span>
+          </div>
+          <div class="panel-content">
+            {% if tracks %}
+              <div class="tc-library-toolbar">
+                <label class="tc-label" for="add-target">ADD SELECTED TO PLAYLIST</label>
+                <div class="tc-input-row">
+                  <select id="add-target" name="playlist_id">
+                    <option value="">-- select playlist --</option>
+                    {% for p in playlists %}
+                      <option value="{{ p.id }}">{{ p.name }}</option>
+                    {% endfor %}
+                  </select>
+                  <button type="submit" class="btn-transmit tc-btn-inline">
+                    <span class="btn-content"><i class="fas fa-folder-plus"></i> ADD</span>
+                  </button>
+                  <button type="submit" class="btn-transmit tc-btn-inline tc-btn-ghost"
+                          formaction="{{ url_for('api_download_selected') }}" formmethod="post">
+                    <span class="btn-content"><i class="fas fa-file-archive"></i> ZIP</span>
+                  </button>
+                </div>
+                <div class="tc-bulk-actions">
+                  <button type="button" id="bulkAll" class="tc-bulk-btn">select all</button>
+                  <button type="button" id="bulkNone" class="tc-bulk-btn">deselect all</button>
+                </div>
+              </div>
+
+              <ul class="track-list" id="trackList">
+                {% for t in tracks %}
+                  <li class="track-row"
+                      data-track-id="{{ t.id }}"
+                      data-stream-url="{{ t.stream_url }}"
+                      data-title="{{ t.title }}"
+                      data-filename="{{ t.filename }}"
+                      data-search="{{ t.title|lower }} {{ t.filename|lower }}">
+                    <div class="track-row-main">
+                      <button type="button" class="track-play-btn" title="Play">
+                        <i class="fas fa-play"></i>
+                      </button>
+                      <label class="track-label">
+                        <input type="checkbox" name="track_ids" value="{{ t.id }}">
+                        <span class="track-title">{{ t.title }}</span>
+                      </label>
+                    </div>
+                    <div class="tiny track-filename">{{ t.filename }}</div>
+                    <div class="track-actions">
+                      <a href="{{ t.download_url }}"><i class="fas fa-download"></i> download</a>
+                    </div>
+                  </li>
+                {% endfor %}
+              </ul>
+              <p class="tc-hint" id="emptyFilter" hidden>No results for the current filter.</p>
+            {% else %}
+              <p class="tc-hint">
+                Library is empty{% if q_e %} for query „{{ q_e }}”{% endif %}.
+                Add new tracks in the <a href="#" data-tools-open>TOOLS</a> section below.
+              </p>
+            {% endif %}
+          </div>
+        </section>
+      </form>
+
+      <div class="tc-tools">
+        <button type="button" id="toolsToggle" class="tc-tools-toggle" aria-expanded="false" aria-controls="toolsArea">
+          <span class="tc-tools-icon"><i class="fas fa-toolbox"></i></span>
+          <span class="tc-tools-label">TOOLS</span>
+          <span class="tc-tools-sub">fetch from YouTube · Spotify import · console · playlists</span>
+          <span class="tc-tools-chevron"><i class="fas fa-chevron-down"></i></span>
+        </button>
+
+        <div id="toolsArea" class="tc-tools-area" aria-hidden="true">
+          <div class="tc-tools-inner">
+
+            <section class="tc-grid-2">
+              <div class="hud-panel" id="tc-fetch">
+                <div class="panel-header">
+                  <span class="header-title">FETCH TRACK</span>
+                  <span class="header-code">YouTube</span>
+                </div>
+                <div class="panel-content">
+                  <form id="fetchForm" class="tc-stack">
+                    <label class="tc-label" for="fetch-q">ARTIST / TITLE</label>
+                    <input id="fetch-q" type="text" name="q" placeholder="Artist - Title" autocomplete="off" required>
+                    <button type="submit" class="btn-transmit">
+                      <span class="btn-content"><i class="fas fa-cloud-download-alt"></i> FETCH TO LIBRARY</span>
+                    </button>
+                    <p class="tc-hint">Without FFmpeg, only native MP3 files are downloaded (when available).</p>
+                  </form>
+                </div>
+              </div>
+
+              <div class="hud-panel" id="tc-spotify">
+                <div class="panel-header">
+                  <span class="header-title">IMPORT SPOTIFY → ZIP</span>
+                  <span class="header-code"><i class="fab fa-spotify"></i> PUBLIC</span>
+                </div>
+                <div class="panel-content">
+                  <form id="spotifyForm" class="tc-stack">
+                    <label class="tc-label" for="spotify-url">PUBLIC PLAYLIST URL</label>
+                    <input id="spotify-url" type="text" name="url" placeholder="https://open.spotify.com/playlist/..." autocomplete="off" required>
+                    <label class="tc-label" for="spotify-limit">TRACK LIMIT</label>
+                    <input id="spotify-limit" type="number" name="limit" value="40" min="1" max="200">
+                    <label class="tc-checkbox">
+                      <input type="checkbox" id="spotify-save" name="save" checked>
+                      <span>Also save downloads to library</span>
+                    </label>
+                    <button type="submit" class="btn-transmit">
+                      <span class="btn-content"><i class="fas fa-file-archive"></i> FETCH JAKO .ZIP</span>
+                    </button>
+                    <p class="tc-hint">
+                      Track titles are fetched via the official Spotify Web API; audio from YouTube.
+                      Requires <code>SPOTIFY_CLIENT_ID</code> i <code>SPOTIFY_CLIENT_SECRET</code>
+                      (free app at
+                      <a href="https://developer.spotify.com/dashboard" target="_blank" rel="noopener">developer.spotify.com/dashboard</a>).
+                    </p>
+                  </form>
+                </div>
+              </div>
+            </section>
+
+            <section class="hud-panel">
+              <div class="panel-header">
+                <span class="header-title">TRANSMISSION CONSOLE</span>
+                <span class="header-code blink" id="consoleStatus">IDLE</span>
+              </div>
+              <div class="panel-content">
+                <div id="consoleLog" class="tc-console">
+                  <div class="log-line">&gt; ready for work.</div>
+                </div>
+                <div class="tc-console-actions" id="consoleActions" hidden>
+                  <a id="consoleDownload" class="btn-transmit" href="#" download>
+                    <span class="btn-content"><i class="fas fa-download"></i> FETCH ZIP</span>
+                  </a>
+                  <button type="button" class="btn-transmit tc-btn-ghost" id="consoleClear">
+                    <span class="btn-content"><i class="fas fa-broom"></i> CLEAR</span>
+                  </button>
+                </div>
+              </div>
+            </section>
+
+            <section class="tc-grid-2">
+              <div class="hud-panel">
+                <div class="panel-header">
+                  <span class="header-title">NEW PLAYLIST</span>
+                  <span class="header-code">LOCAL</span>
+                </div>
+                <div class="panel-content">
+                  <form method="post" action="{{ url_for('playlists_create') }}" class="tc-stack">
+                    <label class="tc-label" for="playlist-name">NAME</label>
+                    <input id="playlist-name" type="text" name="name" placeholder="e.g. Running mix" required autocomplete="off">
+                    <button type="submit" class="btn-transmit">
+                      <span class="btn-content"><i class="fas fa-plus"></i> CREATE</span>
+                    </button>
+                  </form>
+                </div>
+              </div>
+
+              <div class="hud-panel">
+                <div class="panel-header">
+                  <span class="header-title">YOUR PLAYLISTS</span>
+                  <span class="header-code">{{ playlists|length }}</span>
+                </div>
+                <div class="panel-content">
+                  {% if playlists %}
+                    <ul class="tc-playlist-list">
+                      {% for p in playlists %}
+                        <li>
+                          <span class="tc-playlist-name">{{ p.name }}</span>
+                          <span class="tc-playlist-count">({{ p.track_count }})</span>
+                          <a href="{{ url_for('playlist_view', playlist_id=p.id) }}"><i class="fas fa-folder-open"></i> open</a>
+                          <a href="{{ url_for('playlists_delete', playlist_id=p.id) }}" class="tc-link-danger"
+                             onclick="return confirm('Delete this playlist?');"><i class="fas fa-trash"></i> delete</a>
+                        </li>
+                      {% endfor %}
+                    </ul>
+                  {% else %}
+                    <p class="tc-hint">No playlists yet.</p>
+                  {% endif %}
+                </div>
+              </div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+
+      <footer class="tc-crosslink">
+        <div class="tc-crosslink-beam" aria-hidden="true">
+          <span class="tc-crosslink-packet"></span>
+        </div>
+        <div class="tc-crosslink-nodes">
+          <a href="https://turbotoster.dev" class="tc-crosslink-node" target="_blank" rel="noopener">
+            <i class="fas fa-fighter-jet"></i>
+            <span>TURBOTOSTER<span class="highlight">.DEV</span></span>
+          </a>
+          <span class="tc-crosslink-sep">⟷ UPLINK ⟷</span>
+          <span class="tc-crosslink-node tc-crosslink-here">
+            <i class="fas fa-headphones-alt"></i>
+            <span>TURBOCONNECT<span class="highlight">.E75</span></span>
+          </span>
+        </div>
+        <p class="tc-footer-note">Same HUD ecosystem · Nokia E75 · Symbian + Flask</p>
+      </footer>
+    </div>
+  </main>
+
+  <aside id="miniPlayer" class="tc-miniplayer" hidden>
+    <div class="tc-mp-inner">
+      <div class="tc-mp-info">
+        <span class="tc-mp-status"><i class="fas fa-music"></i></span>
+        <div class="tc-mp-text">
+          <div class="tc-mp-title" id="mpTitle">—</div>
+          <div class="tc-mp-meta" id="mpMeta">ready</div>
+        </div>
+      </div>
+      <div class="tc-mp-controls">
+        <button type="button" id="mpPrev" title="Previous"><i class="fas fa-backward-step"></i></button>
+        <button type="button" id="mpPlay" title="Play/Pause"><i class="fas fa-play"></i></button>
+        <button type="button" id="mpNext" title="Next"><i class="fas fa-forward-step"></i></button>
+        <button type="button" id="mpClose" title="Close"><i class="fas fa-xmark"></i></button>
+      </div>
+      <audio id="mpAudio" preload="metadata"></audio>
+    </div>
+  </aside>
+
+  <script src="{{ url_for('static', filename='js/turboconnect.js') }}"></script>
+</body>
+</html>

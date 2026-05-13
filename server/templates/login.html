@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login · Turboconnect</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <link rel="icon" href="{{ url_for('static', filename='img/icon.svg') }}" type="image/svg+xml">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/turboconnect.css') }}">
+</head>
+<body class="theme-aviation tc-app tc-login-page">
+
+  <div class="cockpit-bg">
+    <div class="grid-overlay"></div>
+  </div>
+
+  <header class="tech-header">
+    <div class="tech-nav-container">
+      <a href="{{ url_for('login') }}" class="tech-brand">
+        <div class="brand-icon-box">
+          <i class="fas fa-lock"></i>
+        </div>
+        <div class="brand-text">
+          <span class="brand-title">TURBOCONNECT<span class="highlight">.E75</span></span>
+          <span class="brand-subtitle">SECURE LOGIN</span>
+        </div>
+      </a>
+      <div class="nav-widgets">
+        <div class="system-status">
+          <span class="status-indicator online"></span>
+          <span class="status-text">AUTH GATE</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="tc-main tc-login-main">
+    <div class="tc-login-wrap">
+      <section class="hud-panel tc-login-card">
+        <div class="panel-header">
+          <span class="header-title">AUTHORIZATION</span>
+          <span class="header-code">SESSION</span>
+        </div>
+        <div class="panel-content">
+          <p class="tc-hero-text">
+            The Turboconnect panel is <strong>key-locked</strong>. Sign in to manage your library, playlists, and Spotify imports.
+          </p>
+
+          {% if errors %}
+            <div class="tc-flash">
+              {% for msg in errors %}
+                <div class="tc-flash-line"><i class="fas fa-triangle-exclamation"></i> {{ msg }}</div>
+              {% endfor %}
+            </div>
+          {% endif %}
+
+          <form method="post" action="{{ url_for('login') }}" class="tc-stack tc-login-form" autocomplete="off">
+            <input type="hidden" name="next" value="{{ next }}">
+
+            <label class="tc-label" for="login-username">USERNAME</label>
+            <input id="login-username" type="text" name="username" placeholder="admin" autocomplete="username" autofocus required>
+
+            <label class="tc-label" for="login-password">PASSWORD</label>
+            <input id="login-password" type="password" name="password" placeholder="••••••••" autocomplete="current-password" required>
+
+            <button type="submit" class="btn-transmit">
+              <span class="btn-content"><i class="fas fa-right-to-bracket"></i> LOG IN</span>
+            </button>
+          </form>
+
+          <p class="tc-hint" style="margin-top: 1rem;">
+            On first launch, an <code>admin / admin</code> account is created (or from <code>TURBOCONNECT_USER</code> / <code>TURBOCONNECT_PASS</code>).
+            Change it in <code>users.json</code> next to <code>app.py</code>.
+          </p>
+        </div>
+      </section>
+
+      <footer class="tc-crosslink">
+        <div class="tc-crosslink-beam" aria-hidden="true">
+          <span class="tc-crosslink-packet"></span>
+        </div>
+        <div class="tc-crosslink-nodes">
+          <a href="https://turbotoster.dev" class="tc-crosslink-node" target="_blank" rel="noopener">
+            <i class="fas fa-fighter-jet"></i>
+            <span>TURBOTOSTER<span class="highlight">.DEV</span></span>
+          </a>
+          <span class="tc-crosslink-sep">⟷ UPLINK ⟷</span>
+          <span class="tc-crosslink-node tc-crosslink-here">
+            <i class="fas fa-headphones-alt"></i>
+            <span>TURBOCONNECT<span class="highlight">.E75</span></span>
+          </span>
+        </div>
+        <p class="tc-footer-note">Same HUD ecosystem · Nokia E75 · Symbian + Flask</p>
+      </footer>
+    </div>
+  </main>
+
+  <script src="{{ url_for('static', filename='js/turboconnect.js') }}"></script>
+</body>
+</html>

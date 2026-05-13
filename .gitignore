@@ -1,0 +1,65 @@
+# Stara kopia projektu — nie commituj
+Turboconnect/
+
+# Python: środowiska i śmieci po imporcie
+venv/
+.venv/
+**/.venv/
+server/.venv/
+__pycache__/
+**/__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+
+# Turboconnect — nie wrzucaj sekretów ani lokalnej biblioteki / kolejek
+.env
+.env.*
+!.env.example
+**/secret.key
+
+server/users.json
+server/playlists.json
+server/music_library/**
+!server/music_library/.gitkeep
+server/zips/**
+!server/zips/.gitkeep
+server/jobs/**
+!server/jobs/.gitkeep
+
+Turboconnect/server/users.json
+Turboconnect/server/playlists.json
+Turboconnect/server/music_library/**
+!Turboconnect/server/music_library/.gitkeep
+Turboconnect/server/zips/**
+!Turboconnect/server/zips/.gitkeep
+Turboconnect/server/jobs/**
+!Turboconnect/server/jobs/.gitkeep
+
+# Symbian / Carbide / ABLD
+Epoc32/
+[Bb]WINS/
+ABLD/
+abld/
+*.sis
+*.sisx
+*.app
+*.map
+*.sym
+*.fxc
+*.rsg
+*.o
+*.obj
+
+# Edytor i system
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+.DS_Store
+Thumbs.db
+*~
+*.swp
+*.swo

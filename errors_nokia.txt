@@ -1,0 +1,8 @@
+Creation Time	Description	Resource	Path	Location	Type
+1778624549325	within this context	TurboSoundAppUi.cpp	/TurboSound/src	line 53	C/C++ Problem
+1778624549328	'class CMdaAudioPlayerUtility' has no member named 'Volume'	TurboSoundSimplePlayer.cpp	/TurboSound/src	line 283	C/C++ Problem
+1778624549327	'class CMdaAudioPlayerUtility' has no member named 'GetDuration'	TurboSoundSimplePlayer.cpp	/TurboSound/src	line 269	C/C++ Problem
+1778624549329	'class CMdaAudioPlayerUtility' has no member named 'GetDuration'	TurboSoundSimplePlayer.cpp	/TurboSound/src	line 327	C/C++ Problem
+1778624549330	`void CTurboSoundPlayEngine::GetPlaybackProgressL(TTimeIntervalMicroSeconds&, TTimeIntervalMicroSeconds&)' is private	TurboSoundSimplePlayer.cpp	/TurboSound/src	line 259	C/C++ Problem
+1778624549324	`void CTurboSoundAppUi::TickPlayerUiL()' is private	TurboSoundAppUi.h	/TurboSound/inc	line 73	C/C++ Problem
+1778624549331	within this context	TurboSoundSimplePlayer.cpp	/TurboSound/src	line 476	C/C++ Problem

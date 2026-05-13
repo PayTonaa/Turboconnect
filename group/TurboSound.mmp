@@ -1,0 +1,82 @@
+/*
+============================================================================
+ Name		: TurboSound.mmp
+ Author	  : Turbotoster
+ Copyright   : Your copyright notice
+ Description : This is the project specification file for TurboSound.
+============================================================================
+*/
+
+MACRO _HELP_AVAILABLE_
+
+TARGET			TurboSound_0xE650F19F.exe
+TARGETTYPE		exe
+UID		  0x100039CE 0xE650F19F
+
+SOURCEPATH		..\src
+SOURCE			TurboSound.cpp
+SOURCE			TurboSoundApplication.cpp
+SOURCE			TurboSoundAppView.cpp
+SOURCE			TurboSoundAppUi.cpp
+SOURCE			TurboSoundSimplePlayer.cpp
+SOURCE			TurboSoundDownloader.cpp
+SOURCE			TurboSoundDocument.cpp
+SOURCE			TurboSoundRemCon.cpp
+
+SOURCEPATH		..\data
+
+START RESOURCE	TurboSound.rss
+HEADER
+TARGET TurboSound_0xE650F19F
+TARGETPATH resource\apps
+END //RESOURCE
+
+START RESOURCE	TurboSound_reg.rss
+TARGET TurboSound_0xE650F19F_reg
+TARGETPATH 	  \private\10003a3f\apps
+END //RESOURCE
+
+
+
+USERINCLUDE	   ..\inc
+USERINCLUDE    ..\help
+
+SYSTEMINCLUDE	 \epoc32\include
+
+LIBRARY		   euser.lib
+LIBRARY		   apparc.lib
+LIBRARY		   apgrfx.lib
+LIBRARY		   ws32.lib
+LIBRARY		   cone.lib
+LIBRARY		   eikcore.lib
+LIBRARY		   eikcoctl.lib
+LIBRARY		   eikctl.lib
+LIBRARY		   avkon.lib
+LIBRARY		   commonengine.lib
+LIBRARY		   bafl.lib
+LIBRARY		   efsrv.lib 
+LIBRARY		   estor.lib
+LIBRARY        aknnotify.lib
+LIBRARY        hlplch.lib
+LIBRARY        gdi.lib
+LIBRARY        mediaclientaudio.lib
+LIBRARY        http.lib
+LIBRARY        inetprotutil.lib
+LIBRARY        esock.lib
+LIBRARY        insock.lib
+LIBRARY        commdb.lib
+LIBRARY        charconv.lib
+LIBRARY        remconcoreapi.lib
+LIBRARY        remconinterfacebase.lib
+ 
+
+LANG SC
+
+VENDORID	  	  0
+SECUREID		  0xE650F19F
+CAPABILITY	  	  ReadUserData WriteUserData NetworkServices
+
+#ifdef ENABLE_ABIV2_MODE
+  DEBUGGABLE_UDEBONLY
+#endif
+// End of File

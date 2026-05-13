@@ -1,0 +1,299 @@
+/*
+============================================================================
+ Name		: TurboSound.rss
+ Author	  : Turbotoster
+ Copyright   : Your copyright notice
+ Description : This file contains all the resources for the TurboSound.
+============================================================================
+*/
+//  RESOURCE IDENTIFIER
+NAME TURB	// 4 letter ID
+
+
+//  INCLUDES
+#include <eikon.rh>
+#include <avkon.rsg>
+#include <avkon.rh>
+#include <appinfo.rh>
+#include "TurboSound.hrh"
+#include "TurboSound.rls"
+
+//  RESOURCE DEFINITIONS
+// -----------------------------------------------------------------------------
+//
+//	Define the resource file signature
+//	This resource should be empty.
+//
+// -----------------------------------------------------------------------------
+//
+RESOURCE RSS_SIGNATURE
+	{
+	}
+
+// -----------------------------------------------------------------------------
+//
+//	Default Document Name
+//
+// -----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_default_document_name
+	{
+	buf="TURB";
+	}
+
+// -----------------------------------------------------------------------------
+//
+//	Define default menu and CBA key.
+//
+// -----------------------------------------------------------------------------
+//
+RESOURCE EIK_APP_INFO
+	{
+	menubar = r_menubar;
+	cba = r_softkeys_main;
+	}
+
+// -----------------------------------------------------------------------------
+//
+//   r_softkeys_main
+//   Niestandardowy pasek softkey:
+//     LEFT (Opcje), MSK (Play), RIGHT (Szukaj)
+//
+// -----------------------------------------------------------------------------
+//
+RESOURCE CBA r_softkeys_main
+	{
+	buttons =
+		{
+		CBA_BUTTON { id = EAknSoftkeyOptions; txt = "Opcje"; },
+		CBA_BUTTON { id = ECmdSearch; txt = "Szukaj"; },
+		CBA_BUTTON { id = ECmdPlay; txt = "Play"; }
+		};
+	}
+
+
+// -----------------------------------------------------------------------------
+//
+//   r_menubar
+//   Main menubar
+//
+// -----------------------------------------------------------------------------
+//
+RESOURCE MENU_BAR r_menubar
+	{
+	titles =
+		{
+		MENU_TITLE { menu_pane = r_menu; }
+		};
+	}
+
+
+// -----------------------------------------------------------------------------
+//
+//   r_menu
+//   Menu for "Options"
+//
+// -----------------------------------------------------------------------------
+//
+RESOURCE MENU_PANE r_menu
+	{
+	items =
+		{
+		MENU_ITEM
+				{
+				command = ECmdSearch;
+				txt = qtn_search;
+				},
+		MENU_ITEM
+				{
+				command = ECmdSearchClear;
+				txt = qtn_search_clear;
+				},
+		MENU_ITEM
+				{
+				command = ECmdPlay;
+				txt = qtn_play;
+				},
+		MENU_ITEM
+				{
+				command = ECmdShowNpPanel;
+				txt = qtn_now_panel;
+				},
+		MENU_ITEM
+				{
+				command = ECmdResumeLast;
+				txt = qtn_resume_last;
+				},
+		MENU_ITEM
+				{
+				command = ECmdStop;
+				txt = qtn_stop;
+				},
+		MENU_ITEM
+				{
+				command = ECmdNext;
+				txt = qtn_next;
+				},
+		MENU_ITEM
+				{
+				command = ECmdPrev;
+				txt = qtn_prev;
+				},
+		MENU_ITEM
+				{
+				command = ECmdRefresh;
+				txt = qtn_refresh;
+				},
+		MENU_ITEM
+				{
+				command = ECmdServerList;
+				txt = qtn_server;
+				},
+		MENU_ITEM
+				{
+				command = ECmdFetchOnline;
+				txt = qtn_fetch;
+				},
+		MENU_ITEM
+				{
+				command = ECmdKeyDiag;
+				txt = qtn_key_diag;
+				},
+		MENU_ITEM
+				{
+				command = EAbout;
+				txt = qtn_about;
+				},
+		MENU_ITEM
+				{
+				command = EAknSoftkeyExit;
+				txt = qtn_exit;
+				}
+		};
+	}
+
+// -----------------------------------------------------------------------------
+//
+// About dialog resource.
+//
+// -----------------------------------------------------------------------------
+//
+RESOURCE DIALOG r_about_query_dialog
+	{
+	flags = EGeneralQueryFlags | EEikDialogFlagNoBorder | EEikDialogFlagNoShadow;
+	buttons = R_AVKON_SOFTKEYS_OK_EMPTY;
+	items=
+		{
+		DLG_LINE 
+			{
+			type = EAknCtPopupHeadingPane;
+			id = EAknMessageQueryHeaderId;
+			itemflags = EEikDlgItemNonFocusing;
+			control = AVKON_HEADING
+				{
+				};
+			},
+		DLG_LINE
+			{
+			type = EAknCtMessageQuery;
+			id = EAknMessageQueryContentId;
+			control = AVKON_MESSAGE_QUERY
+				{
+				};
+			}
+		};
+	}
+
+
+// -----------------------------------------------------------------------------
+//
+// Resources for messages.
+//
+// -----------------------------------------------------------------------------
+//
+RESOURCE TBUF32 r_caption_string { buf=qtn_caption_string; }
+RESOURCE TBUF32 r_about_dialog_title { buf=qtn_about_dialog_title; }
+RESOURCE TBUF r_about_dialog_text { buf=qtn_about_dialog_text; }
+RESOURCE TBUF r_command1_text { buf=qtn_command1_text; }
+RESOURCE TBUF r_fetch_prompt { buf=qtn_fetch_prompt; }
+RESOURCE TBUF r_search_prompt { buf=qtn_search_prompt; }
+
+// ---------------------------------------------------------------------------
+// Single-line text query dialog for "Pobierz z internetu".
+// ---------------------------------------------------------------------------
+RESOURCE DIALOG r_fetch_query_dialog
+	{
+	flags = EGeneralQueryFlags;
+	buttons = R_AVKON_SOFTKEYS_OK_CANCEL;
+	items =
+		{
+		DLG_LINE
+			{
+			type = EAknCtQuery;
+			id = EGeneralQuery;
+			control = AVKON_DATA_QUERY
+				{
+				layout = EDataLayout;
+				label = qtn_fetch_prompt;
+				control = EDWIN
+					{
+					flags = EEikEdwinNoHorizScrolling;
+					width = 30;
+					lines = 1;
+					maxlength = 80;
+					};
+				};
+			}
+		};
+	}
+
+// ---------------------------------------------------------------------------
+// Single-line text query dialog for "Szukaj utworu".
+// ---------------------------------------------------------------------------
+RESOURCE DIALOG r_search_query_dialog
+	{
+	flags = EGeneralQueryFlags;
+	buttons = R_AVKON_SOFTKEYS_OK_CANCEL;
+	items =
+		{
+		DLG_LINE
+			{
+			type = EAknCtQuery;
+			id = EGeneralQuery;
+			control = AVKON_DATA_QUERY
+				{
+				layout = EDataLayout;
+				label = qtn_search_prompt;
+				control = EDWIN
+					{
+					flags = EEikEdwinNoHorizScrolling;
+					width = 30;
+					lines = 1;
+					maxlength = 60;
+					};
+				};
+			}
+		};
+	}
+
+
+// ---------------------------------------------------------------------------- 
+//
+// r_localisable_app_info
+//
+// ---------------------------------------------------------------------------- 
+//
+RESOURCE LOCALISABLE_APP_INFO r_localisable_app_info
+	{
+	short_caption = qtn_caption_string;
+	caption_and_icon = 
+	CAPTION_AND_ICON_INFO
+		{
+		caption = qtn_caption_string;
+
+		number_of_icons = 1;
+		icon_file = "\\resource\\apps\\TurboSound_0xE650F19F.mif";
+		};
+	}
+
+// End of File

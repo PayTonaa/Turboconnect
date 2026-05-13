@@ -1,0 +1,2 @@
+Stale export (ignore): listed TurboSoundAppUi.h line 15 mediaclientaudio.h / iAudioPlayer — current repo uses only aknappui.h in AppUi and CTurboSoundSimplePlayer for audio.
+Refresh Carbide Problems view and rebuild after syncing sources from git.

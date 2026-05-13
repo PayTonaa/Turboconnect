@@ -1,0 +1,55 @@
+/*
+============================================================================
+ Name		: TurboSound.rls
+ Author	  : Turbotoster
+ Copyright   : Your copyright notice
+ Description : This is a localisation file for TurboSound
+				A .rls file is the one and only place where the logical
+				strings to be localised are defined. 
+============================================================================
+*/
+
+//  LOCALISATION STRINGS
+
+// Caption string for app.
+#define qtn_caption_string "Turboconnect"
+
+// First item in "Options" menu pane
+#define qtn_command1 "Message"
+
+// Second item in "Options" menu pane
+#define qtn_command2 "Message from file"
+
+#define qtn_help "Help"
+
+#define qtn_about "About"
+
+#define qtn_play "Play / Pauza"
+#define qtn_stop "Stop"
+#define qtn_refresh "Odswiez biblioteke"
+#define qtn_server "Biblioteka serwera"
+#define qtn_fetch "Pobierz z YouTube"
+#define qtn_fetch_prompt "Wpisz: Artysta - Tytul"
+
+#define qtn_search "Szukaj utworu"
+#define qtn_search_clear "Wyczysc filtr"
+#define qtn_search_prompt "Wpisz fragment nazwy"
+#define qtn_next "Nastepny utwor"
+#define qtn_prev "Poprzedni utwor"
+#define qtn_now_panel "Panel odtwarzania"
+#define qtn_resume_last "Wznów ostatnia sesja"
+#define qtn_key_diag "Diagnostyka: nastepny klawisz"
+
+// Third item in "Options" menu pane
+#define qtn_exit "Wyjscie"
+
+// When user requests ECommand1 event, text below is shown.
+#define qtn_command1_text "Hello World!"
+
+#define qtn_loc_resource_file_1 "\\resource\\apps\\TurboSound_0xE650F19F"
+
+#define qtn_about_dialog_title "Turboconnect.E75"
+
+#define qtn_about_dialog_text "Turboconnect.E75\nMusic Node v1.1\n\nAutor: turbotoster.dev\n\nWeb: turboconect.pl\n\n(c) 2026 Turbotoster"
+
+// End of File
